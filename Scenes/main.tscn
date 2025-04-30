@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://ck6weo5yuk00g"]
+
+[ext_resource type="Texture2D" uid="uid://ddbb0v2oqx4qg" path="res://Assets/Sprites/Background.png" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://dqlxr55dwsf6c" path="res://Scenes/main.gd" id="1_kry3j"]
+[ext_resource type="PackedScene" uid="uid://c1ml0hb74kjpf" path="res://Scenes/pipe.tscn" id="2_21xkr"]
+[ext_resource type="PackedScene" uid="uid://b4nvbuwvog5ym" path="res://Scenes/bird.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://btc3c4bjs24r4" path="res://Scenes/ground.tscn" id="3_8gbba"]
+[ext_resource type="FontFile" uid="uid://b8dv3m1gf58bk" path="res://Assets/fonts/PixelOperator8-Bold.ttf" id="6_21xkr"]
+[ext_resource type="PackedScene" uid="uid://b55wfb7ddpv7e" path="res://Scenes/game_over.tscn" id="7_6bp64"]
+[ext_resource type="AudioStream" uid="uid://d30lqc7nt0axr" path="res://Assets/sounds/cool-hip-hop-loop-275527.mp3" id="8_344ge"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_kry3j")
+pipe_scene = ExtResource("2_21xkr")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(0, -1.64017)
+scale = Vector2(0.669282, 0.681575)
+texture = ExtResource("1_jjgbg")
+offset = Vector2(850, 300)
+
+[node name="Bird" parent="." instance=ExtResource("2_bo1nx")]
+up_direction = Vector2(1, 0)
+
+[node name="Ground" parent="." instance=ExtResource("3_8gbba")]
+position = Vector2(5, -25)
+
+[node name="PipeTimer" type="Timer" parent="."]
+wait_time = 1.5
+
+[node name="ScoreLabel" type="Label" parent="."]
+z_index = 1
+offset_left = 18.0
+offset_top = 24.0
+offset_right = 266.0
+offset_bottom = 69.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("6_21xkr")
+theme_override_font_sizes/font_size = 25
+text = "SCORE : 0"
+
+[node name="GameOver" parent="ScoreLabel" instance=ExtResource("7_6bp64")]
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_344ge")
+volume_db = 5.0
+autoplay = true
+
+[connection signal="timeout" from="PipeTimer" to="." method="_on_pipe_timer_timeout"]
+[connection signal="restart" from="ScoreLabel/GameOver" to="." method="_on_game_over_restart"]
